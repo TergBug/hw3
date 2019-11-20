@@ -1,5 +1,6 @@
 package org.mycode;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -18,6 +19,10 @@ public class GameLogicTest {
     private final String messageSelectRPS = "Enter your choice: ";
     private final String messageWrongEntering = "Follow input rule, please";
     private final String patternForRPS = "R|r|P|p|S|s";
+    @Before
+    public void setupGameLogic(){
+        testedGame.init();
+    }
     @Test
     public void shouldCompeteRegistration(){
         assertEquals("Human", testedGame.getPlayerHuman().getName());
@@ -65,5 +70,28 @@ public class GameLogicTest {
     public void shouldValidateInputWithPattern(){
         assertEquals("S", testedGame.validation(inputForValidation, System.out, patternForRPS, messageSelectRPS, messageWrongEntering));
         assertNotEquals("K", testedGame.validation(inputForValidationWrong, System.out, patternForRPS, messageSelectRPS, messageWrongEntering));
+    }
+    @Test
+    public void shouldReactToNullArgumentsInRegistration(){
+        testedGame.registration(null, null);
+        assertEquals("Human", testedGame.getPlayerHuman().getName());
+    }
+    @Test
+    public void shouldReactToNullArgumentsInInputRPS(){
+        testedGame.inputRPS(null, null);
+        assertEquals(RPSElement.UNDEFINED, testedGame.getPlayerHuman().getChosenElement());
+    }
+    @Test
+    public void shouldReactToNullArgumentsInGenerateRPS(){
+        testedGame.generateRPS(null);
+        assertEquals(RPSElement.UNDEFINED, testedGame.getPlayerComputer().getChosenElement());
+    }
+    @Test
+    public void shouldReactToNullArgumentsInCheckForWinner(){
+        assertFalse(testedGame.checkForWinner(null));
+    }
+    @Test
+    public void shouldReactToNullArgumentsInValidation(){
+        assertEquals(null, testedGame.validation(null, null, "","",""));
     }
 }

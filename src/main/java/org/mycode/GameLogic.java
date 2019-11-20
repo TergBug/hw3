@@ -23,16 +23,22 @@ public class GameLogic {
     private Player playerHuman;
     private Player playerComputer;
     public GameLogic(){
+        init();
+    }
+    public void init(){
         playerHuman = new Player("Human");
         playerComputer = new Player("Computer");
     }
     public void playGame(InputStream in, PrintStream out){
+        if(in == null || out == null) return;
         do {
             playLogicOnce(in, out);
             if(validation(in, out, patternForNewGame, messageNewGame, messageWrongEntering).toLowerCase().equals("n")) break;
+            init();
         }while (true);
     }
     public void playLogicOnce(InputStream in, PrintStream out){
+        if(in == null || out == null) return;
         registration(in, out);
         do {
             inputRPS(in, out);
@@ -42,11 +48,13 @@ public class GameLogic {
         }while (true);
     }
     public void registration(InputStream in, PrintStream out){
+        if(in == null || out == null) return;
         out.println(messageGreeting);
         playerHuman.setName(validation(in, out, patternForName, messageName, messageWrongName));
         out.println(messageEnteringRule);
     }
     public void inputRPS(InputStream in, PrintStream out){
+        if(in == null || out == null) return;
         switch (validation(in, out, patternForRPS, messageSelectRPS, messageWrongEntering).toLowerCase()){
             case "r":
                 playerHuman.setChosenElement(RPSElement.ROCK);
@@ -61,6 +69,7 @@ public class GameLogic {
         out.println(messageHumanChoice.replace("#", playerHuman.getChosenElement().name()));
     }
     public void generateRPS(PrintStream out){
+        if(out == null) return;
         switch ((new Random()).nextInt(3)){
             case 0:
                 playerComputer.setChosenElement(RPSElement.ROCK);
@@ -75,6 +84,7 @@ public class GameLogic {
         out.println(messageComputerChoice.replace("#", playerComputer.getChosenElement().name()));
     }
     public boolean checkForWinner(PrintStream out){
+        if(out == null) return false;
         playerHuman.setWinner(playerHuman.getChosenElement().checkForWin(playerComputer.getChosenElement()));
         playerComputer.setWinner(playerComputer.getChosenElement().checkForWin(playerHuman.getChosenElement()));
         if(playerHuman.isWinner() && !playerComputer.isWinner()){
@@ -88,6 +98,7 @@ public class GameLogic {
         return false;
     }
     public String validation(InputStream in, PrintStream out, String pattern, String shownText, String shownTextIfWrong){
+        if(in == null || out == null) return null;
         Scanner scanner = new Scanner(in);
         do {
             out.print(shownText);
